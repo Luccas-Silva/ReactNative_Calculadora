@@ -44,11 +44,11 @@ export default function App() {
         ].map((btn, index) => (
           <TouchableOpacity 
             key={index} 
-            style={[styles.btn, btn === ' ' ? styles.emptyBtn : null]} 
+            style={[styles.btn, btn === ' ' ? styles.emptyBtn : null, isOperator(btn) ? styles.operatorBtn : null]} 
             onPress={() => handlePress(btn)}
             disabled={btn === ' '}
           >
-            <Text style={[styles.btnText, btn === ' ' ? styles.emptyText : null]}>
+            <Text style={[styles.btnText, isOperator(btn) ? styles.operatorText : null]}>
               {btn}
             </Text>
           </TouchableOpacity>
@@ -58,6 +58,8 @@ export default function App() {
   );
 }
 
+const isOperator = (btn) => ['+', '-', '*', '/', '='].includes(btn);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -66,9 +68,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: 50,
     fontWeight: 'bold',
-    color: '#e3e3e3',
+    color: '#00b8ff',
     marginBottom: 20,
   },
   display: {
@@ -103,8 +105,13 @@ const styles = StyleSheet.create({
     color: '#e3e3e3',
     fontWeight: 'bold',
   },
+  operatorBtn: {
+    backgroundColor: '#00b8ff',
+  },
+  operatorText: {
+    color: '#ffffff',
+  },
   emptyText: {
     color: '#e3e3e3',
   },
 });
-
