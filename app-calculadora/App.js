@@ -1,49 +1,59 @@
-import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { StyleSheet, Text, TouchableHighlight, View, TextInput } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, TextInput } from 'react-native';
 
 export default function App() {
   
-  const [value,setValue] = useState('');
-  const [result,setResult] = useState(0);
+  const [value, setValue] = useState('');
 
-  const operation = () => {
-    try {
-      setResult(eval(value));
-    } catch {
-      setResult('Erro');
+  const handlePress = (input) => {
+    if (input === '=') {
+      try {
+        setValue(eval(value).toString());
+      } catch {
+        setValue('Erro');
+      }
+    } else if (input === 'C') {
+      setValue('');
+    } else if (input === '⌫') {
+      setValue(value.slice(0, -1));
+    } else if (input !== ' ') {
+      setValue(value + input);
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Calculadora</Text>
 
-      <View style={styles.displayContainer}>
-        <TextInput 
-          style={styles.display}
-          value={String(value)}
-          onChangeText={(text)=>{setValue(text)}}
-          placeholder="Digite a operação"
-          placeholderTextColor="#888"
-          keyboardType="numeric"
-        ></TextInput>
+      <TextInput 
+        style={styles.display}
+        value={value}
+        editable={false}
+        placeholder="0"
+        placeholderTextColor="#888"
+      />
 
-        <TextInput 
-          style={[styles.display, styles.result]}
-          value={String(result)}
-          editable={false}
-        ></TextInput>
+      <View style={styles.buttonContainer}>
+        {[
+          ' ', ' ', 'C', '⌫',
+          '7', '8', '9', '/',
+          '4', '5', '6', '*',
+          '1', '2', '3', '-',
+          ' ', '0', '.', '+',
+          ' ', ' ', ' ', '='
+        ].map((btn, index) => (
+          <TouchableOpacity 
+            key={index} 
+            style={[styles.btn, btn === ' ' ? styles.emptyBtn : null]} 
+            onPress={() => handlePress(btn)}
+            disabled={btn === ' '}
+          >
+            <Text style={[styles.btnText, btn === ' ' ? styles.emptyText : null]}>
+              {btn}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
-
-      <TouchableHighlight 
-        style={styles.btn}
-        onPress={() => operation()}
-        underlayColor="#444"
-      >
-        <Text style={styles.btnText}>Calcular</Text>
-      </TouchableHighlight>
-
     </View>
   );
 }
@@ -61,35 +71,40 @@ const styles = StyleSheet.create({
     color: '#e3e3e3',
     marginBottom: 20,
   },
-  displayContainer: {
-    width: '80%',
-  },
   display: {
+    width: '90%',
     borderWidth: 2,
     borderRadius: 7,
-    padding: 10,
+    padding: 15,
     borderColor: '#e3e3e3',
     color: '#e3e3e3',
-    fontSize: 20,
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  result: {
+    fontSize: 28,
+    textAlign: 'right',
+    marginBottom: 20,
     backgroundColor: '#333',
   },
+  buttonContainer: {
+    width: '90%',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
   btn: {
-    marginTop: 20,
+    width: '22%',
+    height: 60,
+    margin: 5,
     borderRadius: 7,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderWidth: 2,
-    borderColor: '#e3e3e3',
     backgroundColor: '#29292c',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   btnText: {
-    fontSize: 18,
+    fontSize: 24,
     color: '#e3e3e3',
     fontWeight: 'bold',
   },
+  emptyText: {
+    color: '#e3e3e3',
+  },
 });
+
